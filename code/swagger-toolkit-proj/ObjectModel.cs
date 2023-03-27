@@ -25,7 +25,11 @@ namespace Swagger
             // Parse JsonNode.
             Info = new Info(jsonNode["info"]);
             ApiPaths = jsonNode["paths"].AsObject().Select(x => new ApiPath(x.Key, x.Value)).ToArray();
-            ApiDefinitions = jsonNode["definitions"].AsObject().Select(x => new ApiDefinition(x.Key, x.Value)).ToArray();
+
+            // JKirsch1: Comment out the next line because it throws an exception when the input file doesn't contain a Definitions section.
+            //ApiDefinitions = jsonNode["definitions"].AsObject().Select(x => new ApiDefinition(x.Key, x.Value)).ToArray();
+            // JKirsch1: Add a null-conditional operator to handle JSON files that don't contain a Definitions section.
+            ApiDefinitions = jsonNode["definitions"]?.AsObject().Select(x => new ApiDefinition(x.Key, x.Value)).ToArray();
 
             // Specific swagger file test.
             IsPowerBiClient = string.Equals(Info?.Title, "Power BI Client");
